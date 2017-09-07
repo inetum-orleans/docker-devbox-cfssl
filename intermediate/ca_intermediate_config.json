@@ -1,0 +1,19 @@
+{
+  "signing": {
+    "profiles": {
+      "CA": {
+        "usages": ["cert sign"],
+        "expiry": "87600h",
+        "ca_constraint": {
+          "is_ca": true,
+          "max_path_len": 0,
+          "max_path_len_zero": true
+        }
+      }
+    },
+    "default": {
+      "usages": ["digital signature"],
+      "expiry": "87600h"
+    }
+  }
+}

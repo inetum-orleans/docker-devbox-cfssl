@@ -1,0 +1,6 @@
+intermediate/*
+root/*
+!root/*.json
+!intermediate/*.json
+.idea/
+*.iml
