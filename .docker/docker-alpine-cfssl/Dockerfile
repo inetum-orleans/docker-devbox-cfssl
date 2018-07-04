@@ -38,13 +38,13 @@ RUN apk add --no-cache --virtual .build-deps \
 # Install curl and python for API interaction
     && apk add --no-cache \
         curl \
-        python \
-# Create CFSSL User and Group
-    && addgroup -S cfssl \
-    && adduser -S -g cfssl cfssl
+        python
+
+# Create CFSSL User and Group   
+RUN addgroup -g ${HOST_GID:-1000} -S cfssl && adduser -u ${HOST_UID:-1000} -S -g cfssl cfssl
 
 RUN git config --global http.sslCaInfo "/etc/ssl/certs/ca-certificates.crt"
-    
+
 # Install Goose
 RUN git config --global url."https://github.com/Toilal/bitbucket-liamstask-goose".insteadOf "https://bitbucket.org/liamstask/goose"
 RUN go get bitbucket.org/liamstask/goose/cmd/goose
