@@ -10,6 +10,7 @@ COPY .ca-certificates/* /usr/local/share/ca-certificates/
 RUN update-ca-certificates
 
 ENV GIT_SSL_CAPATH="/etc/ssl/certs/ca-certificates.crt"
+ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 
 ENV CFSSL_CSR="csr_root_ca.json" \
     CFSSL_CONFIG="ca_root_config.json" \
@@ -45,7 +46,10 @@ RUN apk add --no-cache --virtual .build-deps \
 RUN git config --global http.sslCaInfo "/etc/ssl/certs/ca-certificates.crt"
     
 # Install Goose
+RUN git config --global url."https://github.com/Toilal/bitbucket-liamstask-goose".insteadOf "https://bitbucket.org/liamstask/goose"
 RUN go get bitbucket.org/liamstask/goose/cmd/goose
+#RUN git clone https://github.com/Toilal/bitbucket-liamstask-goose.git "${GOPATH}/src/bitbucket.org/liamstask/goose" && cd "${GOPATH}/src/bitbucket.org/liamstask/goose/cmd/goose" && go install
+
 # Install CFSSL
 RUN git clone --depth=1 "https://github.com/cloudflare/cfssl.git" "${GOPATH}/src/github.com/cloudflare/cfssl"
 RUN cd "${GOPATH}/src/github.com/cloudflare/cfssl" \
