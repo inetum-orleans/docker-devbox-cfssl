@@ -1,7 +1,7 @@
-intermediate/*
-root/*
-!root/*.json
-!intermediate/*.json
-.docker/.ca-certificates/
 .idea/
 *.iml
+intermediate/*
+root/*
+.docker/.ca-certificates/
+.bash_enter_env
+!.gitkeep

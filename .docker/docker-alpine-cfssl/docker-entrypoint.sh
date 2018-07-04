@@ -17,13 +17,17 @@ if [ ! -f /etc/cfssl/ca.pem ] || [ ! -f /etc/cfssl/ca-key.pem ] ; then
 
 fi
 
-if [ "${DB_INIT}" -eq "1" ] || [ "${DB_DESTROY}" -eq "1" ] ; then
+if ! [ "${DB_DISABLED}" = '1' ] && ([ "${DB_INIT}" -eq "1" ] || [ "${DB_DESTROY}" -eq "1" ]) ; then
     init-db
 fi
 
-# Add config flags if cfssl
+# Add config flags
 if [ "${1}" = 'cfssl' ]; then
-	set -- "$@" -config="/etc/cfssl/${CFSSL_CONFIG}" -db-config="/etc/cfssl/${DB_CONFIG}"
+    set -- "$@" -config="/etc/cfssl/${CFSSL_CONFIG}"
+
+    if ! [ "${DB_DISABLED}" = '1' ]; then
+        set -- "$@" -db-config="/etc/cfssl/${DB_CONFIG}"
+    fi
 fi
 
 exec "$@"
