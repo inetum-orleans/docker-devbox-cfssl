@@ -19,7 +19,8 @@ Générer un certificat wilcard à partir d'un nom de domaine
 ```
 docker-compose exec intermediate sh
 H=eqo.app # Nom de domaine supporté par le certificat
-cfssl gencert -ca ca.pem -ca-key ca-key.pem -hostname "*$H,*.$H" ca_intermediate_config.json | cfssljson -bare "$H"
+cfssl gencert -ca ca.pem -ca-key ca-key.pem -hostname "$H,*.$H" ca_intermediate_config.json | cfssljson -bare "$H"
+cat ca.pem >> "$H.pem"
 exit
 ```
 
@@ -27,14 +28,13 @@ exit
 
 ***TODO!***
 
-Importer les certificats CA sous windows
+Importer le Root CA sous windows
 ----------------------------------------
 
 - Convertir un certificat PEM en CRT (pour import windows)
 
 ```bash
 openssl x509 -outform der -in root/ca.pem -out root/ca.crt
-openssl x509 -outform der -in intermediate/ca.pem -out intermediate/ca.crt
 ```
 
 - Lancer "certmgr.msc"

@@ -4,6 +4,13 @@
 FROM golang:alpine
 MAINTAINER Dave Lasley <dave@laslabs.com>
 
+RUN apk add --update ca-certificates
+
+COPY .ca-certificates/* /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
+ENV GIT_SSL_CAPATH="/etc/ssl/certs/ca-certificates.crt"
+
 ENV CFSSL_CSR="csr_root_ca.json" \
     CFSSL_CONFIG="ca_root_config.json" \
     DB_CONFIG="db_config.json" \
@@ -12,13 +19,13 @@ ENV CFSSL_CSR="csr_root_ca.json" \
     DB_DESTROY="0"
 
 # Copy Docker Entrypoint
-COPY ./docker-entrypoint.sh /
+COPY docker-alpine-cfssl/docker-entrypoint.sh /
 
 # Copy default CSR JSON
-COPY ./etc/* /etc/cfssl/
+COPY docker-alpine-cfssl/etc/* /etc/cfssl/
 
 # Copy binaries
-COPY ./bin/ /cfssl-bin
+COPY docker-alpine-cfssl/bin /cfssl-bin
 
 # Install Build Dependencies
 RUN apk add --no-cache --virtual .build-deps \
@@ -33,19 +40,19 @@ RUN apk add --no-cache --virtual .build-deps \
         python \
 # Create CFSSL User and Group
     && addgroup -S cfssl \
-    && adduser -S -g cfssl cfssl \
+    && adduser -S -g cfssl cfssl
+
+RUN git config --global http.sslCaInfo "/etc/ssl/certs/ca-certificates.crt"
+    
 # Install Goose
-    && go get bitbucket.org/liamstask/goose/cmd/goose \
+RUN go get bitbucket.org/liamstask/goose/cmd/goose
 # Install CFSSL
-    && git clone --depth=1 "https://github.com/cloudflare/cfssl.git" "${GOPATH}/src/github.com/cloudflare/cfssl" \
-    && cd "${GOPATH}/src/github.com/cloudflare/cfssl" \
+RUN git clone --depth=1 "https://github.com/cloudflare/cfssl.git" "${GOPATH}/src/github.com/cloudflare/cfssl"
+RUN cd "${GOPATH}/src/github.com/cloudflare/cfssl" \
 	&& go build -o /usr/bin/cfssl ./cmd/cfssl \
 	&& go build -o /usr/bin/cfssljson ./cmd/cfssljson \
 	&& go build -o /usr/bin/mkbundle ./cmd/mkbundle \
 	&& go build -o /usr/bin/multirootca ./cmd/multirootca \
-# Install trusted certs
-	&& cp -R "${GOPATH}/src/github.com/cloudflare/cfssl/vendor/github.com/cloudflare/cfssl_trust" / \
-	&& ln -s /cfssl_trust /etc/cfssl/ \
 # Move database migrations to /opt
     && mkdir /opt/ \
     && cp -R "${GOPATH}/src/github.com/cloudflare/cfssl/certdb/" /opt/ \
@@ -63,7 +70,6 @@ RUN apk add --no-cache --virtual .build-deps \
     && chmod 644 /etc/cfssl/*.json \
     && chown cfssl:cfssl /docker-entrypoint.sh \
     && chmod 770 /docker-entrypoint.sh \
-    && chown cfssl:cfssl /cfssl_trust \
     && chown cfssl:cfssl /opt/certdb \
     && chown -R cfssl:cfssl /cfssl-bin \
     && chmod -R 770 /cfssl-bin \
@@ -80,7 +86,7 @@ USER "cfssl:cfssl"
 WORKDIR /etc/cfssl
 
 # Exose ports & volumes
-VOLUME ["/etc/cfssl", "/cfssl_trust"]
+VOLUME ["/etc/cfssl"]
 EXPOSE 8080
 
 # Entrypoint & Command

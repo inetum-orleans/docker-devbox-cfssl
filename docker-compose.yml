@@ -2,11 +2,8 @@ version: "2"
 services:
   root:
     build:
-      context: docker-alpine-cfssl
-      args:
-       http_proxy: ${http_proxy}
-       https_proxy: ${https_proxy}
-       no_proxy: ${no_proxy}
+      context: .docker
+      dockerfile: docker-alpine-cfssl/Dockerfile
     environment:
       - CFSSL_CSR=csr_root_ca.json
       - CFSSL_CONFIG=ca_root_config.json
@@ -16,11 +13,8 @@ services:
     restart: unless-stopped
   intermediate:
     build:
-      context: docker-alpine-cfssl
-      args:
-       http_proxy: ${http_proxy}
-       https_proxy: ${https_proxy}
-       no_proxy: ${no_proxy}
+      context: .docker
+      dockerfile: docker-alpine-cfssl/Dockerfile
     depends_on:
       - root
     ports:
