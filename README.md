@@ -24,23 +24,5 @@ cat ca.pem >> "$H.pem"
 exit
 ```
 
-- Via l'API REST
+- Via l'API REST avec python-cfssl-cli
 
-***TODO!***
-
-Importer le Root CA sous windows
-----------------------------------------
-
-- Convertir un certificat PEM en CRT (pour import windows)
-
-```bash
-openssl x509 -outform der -in root/ca.pem -out root/ca.crt
-```
-
-- Lancer "certmgr.msc"
-
-- Selectionner "Authorité de confiance > Certificats"
-
-- Dans le menu, choisir "Action > Toutes les tâches > Importer..."
-
-- Choisir le fichier `root/ca.crt`

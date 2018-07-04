@@ -9,10 +9,20 @@
 #
 # See http://smartcd.org for more ideas about what can be put here
 #######################################################################
-BASH_ENTER_ENV_FILE=".bash_enter_env" ; [ -f $BASH_ENTER_ENV_FILE ] && . $BASH_ENTER_ENV_FILE
+BASH_ENTER_ENV_FILE=".bash_enter_env"
+cp -n $BASH_ENTER_ENV_FILE.dist $BASH_ENTER_ENV_FILE
+[ -f $BASH_ENTER_ENV_FILE ] && . $BASH_ENTER_ENV_FILE
 
 if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then
+  autostash export USER_ID=$(id -u)
+  autostash export GROUP_ID=$(id -g)
+  autostash export USER_NAME=$(id -un)
+  autostash export GROUP_NAME=$(id -gn)
+  autostash export HOST_IP=${HOST_IP-127.0.0.1}
+
   autostash COMPOSE_PROJECT_DIR=$PWD
+  autostash DOCKER_VERSION=$(docker --version | sed -rn "s/Docker version (.*?), build .*/\1/p")
+  autostash DOCKER_COMPOSE_VERSION=$(docker-compose --version | sed -rn "s/docker-compose version (.*?), build .*/\1/p")
 
   # Define DOCKER_DEVBOX_ENV to customize environment configuration files
   autostash DOCKER_DEVBOX_ENV="${DOCKER_DEVBOX_ENV:-dev}"
@@ -21,24 +31,41 @@ if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then
   # Copy host CA certificates to .docker directory for usage in Dockerfile
   rm -Rf .docker/.ca-certificates
   mkdir -p .docker/.ca-certificates
-  if ls /etc/ssl/certs/{GFI*.pem,*.local.pem} 1> /dev/null 2>&1; then
-    cp -L /etc/ssl/certs/{GFI*.pem,*.local.pem} .docker/.ca-certificates
-    for file in .docker/.ca-certificates/*.pem; do
-      mv "$file" ".docker/.ca-certificates/$(basename "$file" .pem).crt"
+  cp -L /etc/ssl/certs/{GFI*.pem,*.local.pem} .docker/.ca-certificates
+  for file in .docker/.ca-certificates/*.pem; do
+    mv "$file" ".docker/.ca-certificates/$(basename "$file" .pem).crt"
+  done
+  echo "OK!"
+
+  _docker_devbox_env_symlink() {
+    FILEPATH="$1"
+
+    DIRNAME=$(dirname -- "$FILEPATH")
+    FILENAME=$(basename -- "$FILEPATH")
+    EXTENSION="${FILENAME##*.}"
+    FILENAME="${FILENAME%.*}"
+
+    ACTIVE_ENV=0
+    MESSAGE="[symlink] $DIRNAME/$FILENAME.$DOCKER_DEVBOX_ENV.$EXTENSION -> $DIRNAME/$FILENAME.$EXTENSION. (Symlink has not been created)"
+
+    for ENV in $DOCKER_DEVBOX_ENV_LIST; do
+      if [ "$ENV" = "$DOCKER_DEVBOX_ENV" ]; then
+        ACTIVE_ENV=1;
+      fi
+      if [ $ACTIVE_ENV = 1 ]; then
+        if [ -f "$DIRNAME/$FILENAME.$ENV.$EXTENSION" ]; then
+          ln -rfs "$DIRNAME/$FILENAME.$ENV.$EXTENSION" "$DIRNAME/$FILENAME.$EXTENSION"
+          MESSAGE="[symlink] $DIRNAME/$FILENAME.$ENV.$EXTENSION -> $DIRNAME/$FILENAME.$EXTENSION"
+          break
+        fi
+      fi
     done
-    echo "OK!"
-  else
-    touch .docker/.ca-certificates/.no-certificate-found
-    echo "No certificate found"
-  fi
+
+    echo "$MESSAGE"
+  }
+
+  _docker_devbox_env_symlink "docker-compose.override.yml"
 fi
-
-autostash export USER_ID=$(id -u)
-autostash export GROUP_ID=$(id -g)
-autostash export USER_NAME=$(id -un)
-autostash export GROUP_NAME=$(id -gn)
-autostash export HOST_IP=${HOST_IP-127.0.0.1}
-
 _docker_devbox_map_workdir() {
   CONTAINER_PROJECT_DIR="$1"
 
