@@ -7,7 +7,7 @@ services:
     environment:
       - CFSSL_CSR=csr_root_ca.json
       - CFSSL_CONFIG=ca_root_config.json
-      - DB_CONFIG=db_config.json
+      # - DB_CONFIG=db_config.json
     volumes:
       - "./root:/etc/cfssl"
   intermediate:
@@ -20,6 +20,6 @@ services:
       - CFSSL_CSR=csr_intermediate_ca.json
       - CFSSL_CONFIG=ca_intermediate_config.json
       - CA_ROOT_URI=http://root:8080
-      - DB_CONFIG=db_config.json
+      # - DB_CONFIG=db_config.json
     volumes:
       - "./intermediate:/etc/cfssl"
