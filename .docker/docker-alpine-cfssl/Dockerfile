@@ -77,6 +77,9 @@ RUN chown -R cfssl:cfssl /etc/cfssl \
     && chmod -R 770 /cfssl-bin \
     && ln -s /cfssl-bin/* /bin
 
+# Allow cfssl to run server on port < 1024
+RUN apk add --update libcap && setcap 'cap_net_bind_service=+ep' $(which cfssl) && apk del libcap
+
 # Switch from root user
 USER "cfssl:cfssl"
 
