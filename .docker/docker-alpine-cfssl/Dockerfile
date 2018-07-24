@@ -85,7 +85,7 @@ WORKDIR /etc/cfssl
 
 # Exose ports & volumes
 VOLUME ["/etc/cfssl"]
-EXPOSE 8888
+EXPOSE 80
 
 # Entrypoint & Command
 ENTRYPOINT ["/docker-entrypoint.sh"]
@@ -93,5 +93,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["cfssl", \
      "serve", \
      "-address=0.0.0.0", \
+     "-port=80", \
      "-ca=/etc/cfssl/ca.pem", \
      "-ca-key=/etc/cfssl/ca-key.pem"]
