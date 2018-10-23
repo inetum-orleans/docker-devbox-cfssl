@@ -1,9 +1,12 @@
-version: "2"
+version: "2.2"
 services:
   root:
     build:
       context: .docker
       dockerfile: docker-alpine-cfssl/Dockerfile
+    image: ${DOCKER_DEVBOX_REGISTRY}cfssl/root
+    init: true
+    restart: ${DOCKER_DEVBOX_RESTART_POLICY}
     environment:
       - CFSSL_CSR=csr_root_ca.json
       - CFSSL_CONFIG=ca_root_config.json
@@ -14,6 +17,9 @@ services:
     build:
       context: .docker
       dockerfile: docker-alpine-cfssl/Dockerfile
+    image: ${DOCKER_DEVBOX_REGISTRY}cfssl/intermediate
+    init: true
+    restart: ${DOCKER_DEVBOX_RESTART_POLICY}
     depends_on:
       - root
     environment:

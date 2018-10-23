@@ -3,5 +3,7 @@
 intermediate/*
 root/*
 .docker/.ca-certificates/
-.bash_enter_env
+.bash_enter.env
 !.gitkeep
+docker-compose.override.yml
+.docker/**/Dockerfile
