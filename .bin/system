@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
+set -e
 
-. "$DOCKER_DEVBOX_DIR/.bash_leave.d/90-cleanup-path"
+if [ -d "$DOCKER_DEVBOX_DIR"/.bash.lib.d ]; then
+  for lib_script in "$DOCKER_DEVBOX_DIR"/.bash.lib.d/*; do
+    # shellcheck source=/dev/null
+    . "$lib_script"
+  done
+fi
 
-$@
+PATH_ITEM="$DOCKER_DEVBOX_DIR/.bin"
+PATH=$(echo "$PATH" | sed -e "s;:\?$PATH_ITEM;;" -e "s;$PATH_ITEM:\?;;" | sed -e "s;:$;;" | sed -e "s;^:;;")
 
-. "$DOCKER_DEVBOX_DIR/.bash_enter.d/10-path"
+"$@"
