@@ -22,6 +22,8 @@ services:
     restart: ${DOCKER_DEVBOX_RESTART_POLICY}
     depends_on:
       - root
+    ports:
+      - "${DOCKER_DEVBOX_PORT_PREFIX}80:80"
     environment:
       - CFSSL_CSR=csr_intermediate_ca.json
       - CFSSL_CONFIG=ca_intermediate_config.json
