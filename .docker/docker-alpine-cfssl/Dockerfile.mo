@@ -42,6 +42,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && addgroup -S cfssl \
     && adduser -S -g cfssl cfssl \
 # Install Goose
+    && git config --global url."https://github.com/Toilal/bitbucket-liamstask-goose".insteadOf "https://bitbucket.org/liamstask/goose" \
     && go get bitbucket.org/liamstask/goose/cmd/goose \
 # Install CFSSL
     && git clone --depth=1 "https://github.com/cloudflare/cfssl.git" "${GOPATH}/src/github.com/cloudflare/cfssl" \
