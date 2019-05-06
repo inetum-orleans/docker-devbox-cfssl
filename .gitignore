@@ -7,4 +7,5 @@
 /.init/
 /.bash_enter.env
 /.bin/jq
+/.docker-compose.env
 /.nginx-proxy/certs/*
