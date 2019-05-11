@@ -24,5 +24,12 @@ cat ca.pem >> "$H.pem"
 exit
 ```
 
-- Via l'API REST avec python-cfssl-cli
+- Via l'API REST avec [cfssl-cli](https://github.com/Toilal/python-cfssl-cli)
 
+Récupérer le certificate racine à ajouter au truststore
+-------------------------------------------------------
+- En ligne de commande sur le serveur
+
+```
+docker-compose exec root cat /etc/cfssl/ca.pem
+```
