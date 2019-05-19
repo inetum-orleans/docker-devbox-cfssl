@@ -1,11 +1,12 @@
 version: "2.2"
 networks:
-  nginx-proxy:
+  reverse-proxy:
     external: true
+    name: ${DOCKER_DEVBOX_REVERSE_PROXY_NETWORK}
 services:
   intermediate:
     environment:
       - VIRTUAL_HOST=${DOCKER_DEVBOX_DOMAIN_PREFIX}.${DOCKER_DEVBOX_DOMAIN}
     networks:
       - default
-      - nginx-proxy
+      - reverse-proxy

@@ -1,7 +1,7 @@
 {
   "@gfi-centre-ouest/generator-docker-devbox": {
     "promptValues": {
-      "projectName": "docker-cfssl",
+      "projectName": "cfssl",
       "authorName": "Rémi Alvergnat",
       "authorEmail": "remi.alvergnat@gfi.fr",
       "features~0": [],
