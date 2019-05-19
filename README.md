@@ -1,10 +1,9 @@
-CFSSL pour GFI Orléans
-======================
+docker-devbox-cfssl
+===================
 
-Permet de générer des certificats à partir d'un chaine à 3 niveaux (Root CA, Intermediate CA, End-User Certificate).
+CFSSL docker-compose configuration to use with docker-devbox.
 
-Il est nécessaire de déclarer les 2 certificats CA (Root CA, Intermediate CA) dans l'OS de l'utilisateur pour que les 
-certificats End-User soient reconnus par le navigateur.
+It allows to generate certificates from a 3 level chain (Root CA, Intermediate CA, End-User CA)
 
 Installation
 ------------
@@ -12,23 +11,23 @@ Installation
 docker-compose up
 ```
 
-Générer un certificat wilcard à partir d'un nom de domaine
-----------------------------------------------------------
-- En ligne de commande sur le serveur
+Generate a wildcard certificate for a domain name
+--------------------------------------------------
+- From server shell
 
 ```
 docker-compose exec intermediate sh
-H=eqo.app # Nom de domaine supporté par le certificat
+H=eqo.app # Domaine name of the certificate
 cfssl gencert -ca ca.pem -ca-key ca-key.pem -hostname "$H,*.$H" ca_intermediate_config.json | cfssljson -bare "$H"
 cat ca.pem >> "$H.pem"
 exit
 ```
 
-- Via l'API REST avec [cfssl-cli](https://github.com/Toilal/python-cfssl-cli)
+- From REST API with [cfssl-cli](https://github.com/Toilal/python-cfssl-cli)
 
-Récupérer le certificate racine à ajouter au truststore
--------------------------------------------------------
-- En ligne de commande sur le serveur
+Get the root certificate to add to client truststore
+----------------------------------------------------
+- From server shell
 
 ```
 docker-compose exec root cat /etc/cfssl/ca.pem
