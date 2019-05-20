@@ -29,8 +29,16 @@ services:
       - CFSSL_CONFIG=ca_intermediate_config.json
       - CA_ROOT_URI=http://root.${COMPOSE_NETWORK_NAME}
       - DB_DISABLED=1
+      - VIRTUAL_HOST=${DOCKER_DEVBOX_DOMAIN_PREFIX}.${DOCKER_DEVBOX_DOMAIN}
+    networks:
+      - default
+      - reverse-proxy
     volumes:
       - "intermediate:/etc/cfssl"
+networks:
+  reverse-proxy:
+    external: true
+    name: ${DOCKER_DEVBOX_REVERSE_PROXY_NETWORK}
 volumes:
   root:
   intermediate:

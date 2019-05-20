@@ -16,7 +16,7 @@ Generate a wildcard certificate for a domain name
 - From server shell
 
 ```
-docker-compose exec intermediate sh
+dc exec intermediate sh
 H=eqo.app # Domaine name of the certificate
 cfssl gencert -ca ca.pem -ca-key ca-key.pem -hostname "$H,*.$H" ca_intermediate_config.json | cfssljson -bare "$H"
 cat ca.pem >> "$H.pem"
@@ -30,5 +30,5 @@ Get the root certificate to add to client truststore
 - From server shell
 
 ```
-docker-compose exec root cat /etc/cfssl/ca.pem
+dc exec root cat /etc/cfssl/ca.pem
 ```
