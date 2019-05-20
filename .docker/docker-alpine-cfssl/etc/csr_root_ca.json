@@ -1,18 +1,9 @@
 {
-  "CN": "My Root CA",
+  "CN": "Docker Devbox Root CA",
   "key": {
     "algo": "ecdsa",
     "size": 256
   },
-    "names": [
-       {
-         "C": "US",
-         "L": "Las Vegas",
-         "O": "Example Company",
-         "OU": "CA Services",
-         "ST": "Nevada"
-       }
-    ],
   "ca": {
     "expiry": "262800h"
   }

@@ -1,0 +1,5 @@
+#/usr/bin/env bash
+
+export CAROOT="${DOCKER_DEVBOX_CERTS_PATH}/cfssl-ca"
+dc exec root cat /etc/cfssl/ca.pem>"$CAROOT"/rootCA.pem
+mkcert -install
