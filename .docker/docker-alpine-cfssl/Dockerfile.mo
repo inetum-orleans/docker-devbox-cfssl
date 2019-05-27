@@ -3,11 +3,9 @@
 
 FROM golang:alpine
 
-{{#DOCKER_DEVBOX_CA_CERTIFICATES}}
 COPY .ca-certificates/* /usr/local/share/ca-certificates/
 RUN apk add --update ca-certificates
 RUN update-ca-certificates
-{{/DOCKER_DEVBOX_CA_CERTIFICATES}}
 
 ENV CFSSL_CSR="csr_root_ca.json" \
     CFSSL_CONFIG="ca_root_config.json" \
