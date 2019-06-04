@@ -1,15 +1,7 @@
 #/usr/bin/env bash
 
 MKCERT=$(command -v mkcert)
-
-if [ ! -x "$MKCERT" ]; then
-  echo "$(tput setaf 3)mkcert is not available. Downloading binary ...$(tput sgr0)"
-  MKCERT_VERSION=$(curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest | grep 'tag_name' | cut -d\" -f4)
-
-  curl -fsSL -o "$DOCKER_DEVBOX_SCRIPTS_PATH/.bin/mkcert" "https://github.com/FiloSottile/mkcert/releases/download/$MKCERT_VERSION/mkcert-$MKCERT_VERSION-linux-amd64"
-  chmod +x "$DOCKER_DEVBOX_SCRIPTS_PATH/.bin/mkcert"
+if [[ -x "$MKCERT" ]]; then
+  export CAROOT="${DOCKER_DEVBOX_CERTS_PATH}/cfssl-ca"
+  mkcert -install
 fi
-
-export CAROOT="${DOCKER_DEVBOX_CERTS_PATH}/cfssl-ca"
-dc exec root cat /etc/cfssl/ca.pem>"$CAROOT"/rootCA.pem
-mkcert -install
