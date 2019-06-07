@@ -1,7 +1,0 @@
-#/usr/bin/env bash
-
-MKCERT=$(command -v mkcert)
-if [[ -x "$MKCERT" ]]; then
-  export CAROOT="${DOCKER_DEVBOX_CERTS_PATH}/cfssl-ca"
-  mkcert -install
-fi

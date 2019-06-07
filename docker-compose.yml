@@ -1,11 +1,8 @@
 version: '2.2'
 services:
   root:
-    build:
-      context: .docker
-      dockerfile: cfssl/Dockerfile
+    image: gficentreouest/alpine-cfssl
     init: true
-    user: '${USER_ID}:${GROUP_ID}'
     restart: ${DOCKER_DEVBOX_RESTART_POLICY}
     environment:
       - CFSSL_CSR=csr_root_ca.json
@@ -13,13 +10,9 @@ services:
       - DB_DISABLED=1
     volumes:
       - "root:/etc/cfssl"
-      - "${DOCKER_DEVBOX_CERTS_PATH}/cfssl-ca:/rootca"
   intermediate:
-    build:
-      context: .docker
-      dockerfile: cfssl/Dockerfile
+    image: gficentreouest/alpine-cfssl
     init: true
-    user: '${USER_ID}:${GROUP_ID}'
     restart: ${DOCKER_DEVBOX_RESTART_POLICY}
     depends_on:
       - root

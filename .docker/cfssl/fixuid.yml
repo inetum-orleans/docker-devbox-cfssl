@@ -1,7 +1,0 @@
-user: cfssl
-group: cfssl
-paths:
-  - /
-  - /cfssl_bin
-  - /etc/cfssl
-  - /cfssl_trust
