@@ -10,9 +10,6 @@ services:
       - DB_DISABLED=1
     ports:
       - "${DOCKER_DEVBOX_PORT_PREFIX}80:80"
-    networks:
-      - default
-      - reverse-proxy
     volumes:
       - "intermediate:/etc/cfssl"
 volumes:
