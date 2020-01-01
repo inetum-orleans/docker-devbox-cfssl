@@ -12,5 +12,7 @@ services:
       - "${DOCKER_DEVBOX_PORT_PREFIX}80:80"
     volumes:
       - "intermediate:/etc/cfssl"
+      - "intermediate_trust:/cfssl_trust"
 volumes:
   intermediate:
+  intermediate_trust:

@@ -10,6 +10,7 @@ services:
       - DB_DISABLED=1
     volumes:
       - "root:/etc/cfssl"
+      - "root_trust:/cfssl_trust"
   intermediate:
     image: gficentreouest/alpine-cfssl
     init: true
@@ -25,6 +26,9 @@ services:
       - DB_DISABLED=1
     volumes:
       - "intermediate:/etc/cfssl"
+      - "intermediate_trust:/cfssl_trust"
 volumes:
   root:
+  root_trust:
   intermediate:
+  intermediate_trust:
