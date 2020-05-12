@@ -1,0 +1,6 @@
+smartcd:
+  disabled: true
+docker:
+  port_prefix: 77
+project:
+  chain: false
