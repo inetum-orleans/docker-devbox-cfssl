@@ -2,5 +2,6 @@ smartcd:
   disabled: true
 docker:
   port_prefix: 77
+  restart_policy: unless-stopped
 project:
   chain: false
