@@ -1,6 +1,6 @@
-###> gfi-centre-ouest/docker-devbox ###
+###> inetum-orleans/docker-devbox ###
 .certs/*.key
 .certs/*.crt
 docker-compose.yml
 *ddb.local.*
-###< gfi-centre-ouest/docker-devbox ###
+###< inetum-orleans/docker-devbox ###
