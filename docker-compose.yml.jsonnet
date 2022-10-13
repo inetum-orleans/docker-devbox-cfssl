@@ -1,6 +1,6 @@
 local ddb = import 'ddb.docker.libjsonnet';
 
-local pp = std.extVar("docker.port_prefix");
+local pp = std.extVar("jsonnet.docker.expose.port_prefix");
 local chain = std.extVar("project.chain");
 local compose_network_name = std.extVar("docker.compose.network_name");
 local domain_ext = std.extVar("core.domain.ext");
